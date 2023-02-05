@@ -1,27 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.1.3/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
 </head>
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.1.3/dist/vuetify.min.js"></script>
 
     {% block content %}
-    <div id="app">[[ message ]]</div>
-
-    <script>
-      const { createApp } = Vue
-
-      createApp({
-        delimiters: ['[[', ']]'],
-        data() {
-          return {
-            message: 'Hello Vue!'
-          }
-        }
-      }).mount('#app')
-    </script>
     {% endblock %}
 </body>
 </html>

@@ -1,4 +1,40 @@
 {% extends 'masterpage.html' %}
 {% block content %}
-    <div id="app">dsdfdsfdsfw</div>
+    <div id="app">
+        <v-app :theme="theme">
+            <v-app-bar>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+                @click="onClick"></v-btn>
+            </v-app-bar>
+
+            <v-main>
+              <v-container>Content area</v-container>
+            </v-main>
+        </v-app>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+        const { createVuetify } = Vuetify
+
+        const vuetify = createVuetify()
+
+        createApp({
+            delimiters: ['[[', ']]'],
+            data() {
+              return {
+                message: 'Hello Vue!',
+                theme: 'light'
+              }
+            },
+            methods: {
+                onClick () {
+                    this.theme = this.theme === 'light' ? 'dark' : 'light'
+                }
+            }
+        }).use(vuetify).mount('#app')
+    </script>
 {% endblock %}
