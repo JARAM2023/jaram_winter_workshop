@@ -22,7 +22,6 @@ def page_logout(request):
     if request.user.is_anonymous:
         return redirect('login')
     logout(request)
-    print(request.session)
     return redirect('login')
 
 def form_login(request):

@@ -6,7 +6,19 @@
                 <v-app-bar-title>Workshop</v-app-bar-title>
                 <v-spacer></v-spacer>
 
-                <v-btn icon>
+                <v-btn>
+                    대회안내
+                </v-btn>
+                <v-btn>
+                    리더보드
+                </v-btn>
+                <v-btn>
+                    팀
+                </v-btn>
+                <v-btn>
+                    제출
+                </v-btn>
+                <v-btn icon size="small" class="ml-2">
                     <a href="{% url 'logout' %}">
                         <v-avatar color="brown">
                             {{ user.username|slice:":2" }}
@@ -19,8 +31,32 @@
 {#                @click="onClick"></v-btn>#}
             </v-app-bar>
 
-            <v-main>
-              <v-container>Content area</v-container>
+            <v-main class="d-flex flex-column align-center ">
+                <div class="main-con pa-5 w-100">
+                    {% block index_content %}
+                    <v-card>
+                        <v-tabs
+                        v-model="tab"
+                        bg-color="primary"
+                        >
+                            <v-tab value="one">대회설명</v-tab>
+                            <v-tab value="two">데이터</v-tab>
+                        </v-tabs>
+
+                        <v-card-text>
+                            <v-window v-model="tab">
+                            <v-window-item value="one">
+                              One
+                            </v-window-item>
+
+                            <v-window-item value="two">
+                              Two
+                            </v-window-item>
+                            </v-window>
+                        </v-card-text>
+                    </v-card>
+                    {% endblock %}
+                </div>
             </v-main>
         </v-app>
     </div>
@@ -36,7 +72,8 @@
             data() {
               return {
                 message: 'Hello Vue!',
-                theme: 'light'
+                theme: 'light',
+                tab: null,
               }
             },
             methods: {
@@ -50,6 +87,10 @@
     <style>
     a {
         text-decoration: none;
+    }
+
+    .main-con {
+        max-width: 800px;
     }
     </style>
 {% endblock %}
