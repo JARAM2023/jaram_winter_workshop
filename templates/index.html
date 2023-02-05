@@ -4,11 +4,19 @@
         <v-app :theme="theme">
             <v-app-bar>
                 <v-app-bar-title>Workshop</v-app-bar-title>
-              <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
 
-              <v-btn
-                :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-                @click="onClick"></v-btn>
+                <v-btn icon>
+                    <a href="{% url 'logout' %}">
+                        <v-avatar color="brown">
+                            {{ user.username|slice:":2" }}
+                        </v-avatar>
+                    </a>
+                </v-btn>
+
+{#                <v-btn#}
+{#                :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"#}
+{#                @click="onClick"></v-btn>#}
             </v-app-bar>
 
             <v-main>
@@ -38,4 +46,10 @@
             }
         }).use(vuetify).mount('#app')
     </script>
+
+    <style>
+    a {
+        text-decoration: none;
+    }
+    </style>
 {% endblock %}

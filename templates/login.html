@@ -6,9 +6,9 @@
                 <v-app-bar-title>Workshop</v-app-bar-title>
               <v-spacer></v-spacer>
 
-              <v-btn
-                :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-                @click="onClick"></v-btn>
+{#              <v-btn#}
+{#                :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"#}
+{#                @click="onClick"></v-btn>#}
             </v-app-bar>
 
             <v-main class="pl-6 pr-6 pb-6 mt-6 d-flex flex-column justify-center align-center">
@@ -41,7 +41,7 @@
                         </div>
                     </v-card-item>
                 </v-card>
-                {% if message %}<v-snackbar v-model="snackbar">{{ message }}</v-snackbar>{% endif %}
+                {% if message %}<v-snackbar v-model="snackbar" color="red">{{ message }}</v-snackbar>{% endif %}
             </v-main>
         </v-app>
     </div>
