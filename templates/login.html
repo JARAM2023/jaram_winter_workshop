@@ -41,6 +41,7 @@
                         </div>
                     </v-card-item>
                 </v-card>
+                {% if message %}<v-snackbar v-model="snackbar">{{ message }}</v-snackbar>{% endif %}
             </v-main>
         </v-app>
     </div>
@@ -72,12 +73,16 @@
                       return 'Last name can not contain digits.'
                     },
                   ],
+                  snackbar: false,
               }
             },
             methods: {
                 onClick () {
                     this.theme = this.theme === 'light' ? 'dark' : 'light'
                 }
+            },
+            mounted() {
+                this.snackbar = true
             }
         }).use(vuetify).mount('#app')
     </script>
