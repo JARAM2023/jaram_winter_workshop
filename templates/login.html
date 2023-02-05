@@ -11,23 +11,35 @@
                 @click="onClick"></v-btn>
             </v-app-bar>
 
-            <v-main class="pl-6 pr-6 pb-6 mt-6">
+            <v-main class="pl-6 pr-6 pb-6 mt-6 d-flex flex-column justify-center align-center">
                 <v-card
-                title="This is a title"
-                  subtitle="This is a subtitle"
-                  text="This is content"
-                >
-                <v-card
-                title="This is a title"
-                  subtitle="This is a subtitle"
-                  text="This is content"
-                >
-                <v-card
-                title="This is a title"
-                  subtitle="This is a subtitle"
-                  text="This is content"
-                >
+                max-width="400" min-width="150" class="w-50" variant="outlined">
+                    <v-card-item>
+                        <div class="d-flex flex-column justify-center align-center">
+                            <div class="text-h6">로그인</div>
+                            <div class="w-100 mt-2">
+                                <v-form method="post" action="{% url 'form_login' %}">
+                                    {% csrf_token %}
+                                  <v-text-field
+                                    v-model="text_id"
+                                    label="id"
+                                    :rules="firstNameRules"
+                                    name="text_id"
+                                  ></v-text-field>
 
+                                  <v-text-field
+                                    v-model="text_password"
+                                    label="password"
+{#                                    :rules="lastNameRules"#}
+                                    name="text_password"
+                                    type="password"
+                                  ></v-text-field>
+
+                                  <v-btn type="submit" block class="mt-2">로그인</v-btn>
+                                </v-form>
+                            </div>
+                        </div>
+                    </v-card-item>
                 </v-card>
             </v-main>
         </v-app>
@@ -44,7 +56,22 @@
             data() {
               return {
                 message: 'Hello Vue!',
-                theme: 'light'
+                theme: 'light',
+                  text_id: '',
+                  firstNameRules: [
+                    value => {
+                      if (value?.length > 3) return true
+                      return '아이디는 세 글자 이상입니다.'
+                    },
+                  ],
+                  text_password: '',
+                  lastNameRules: [
+                    value => {
+                      if (/[^0-9]/.test(value)) return true
+
+                      return 'Last name can not contain digits.'
+                    },
+                  ],
               }
             },
             methods: {

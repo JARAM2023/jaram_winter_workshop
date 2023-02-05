@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 
-def index(request):
+def page_index(request):
     if request.user.is_anonymous:
         return redirect('login')
     else:
         return render(request, 'index.html')
 
-def login(request):
+def page_login(request):
     return render(request, 'login.html')
+
+def form_login(request):
+    if request.method == 'POST':
+        print(request.POST)
