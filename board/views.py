@@ -24,6 +24,15 @@ def page_logout(request):
     logout(request)
     return redirect('login')
 
+def page_leader(request):
+    return render(request, 'leader.html')
+
+def page_team(request):
+    return render(request, 'team.html')
+
+def page_submit(request):
+    return render(request, 'submit.html')
+
 def form_login(request):
     if request.method == 'POST':
         id = request.POST['text_id']

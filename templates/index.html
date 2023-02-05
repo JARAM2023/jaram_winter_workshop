@@ -6,24 +6,22 @@
                 <v-app-bar-title>Workshop</v-app-bar-title>
                 <v-spacer></v-spacer>
 
-                <v-btn>
+                <v-btn @click="this.$defaultWindow.location.href='{% url 'index' %}'">
                     대회안내
                 </v-btn>
-                <v-btn>
+                <v-btn @click="this.$defaultWindow.location.href='{% url 'leader' %}'">
                     리더보드
                 </v-btn>
-                <v-btn>
+                <v-btn @click="this.$defaultWindow.location.href='{% url 'team' %}'">
                     팀
                 </v-btn>
-                <v-btn>
+                <v-btn @click="this.$defaultWindow.location.href='{% url 'submit' %}'">
                     제출
                 </v-btn>
-                <v-btn icon size="small" class="ml-2">
-                    <a href="{% url 'logout' %}">
-                        <v-avatar color="brown">
-                            {{ user.username|slice:":2" }}
-                        </v-avatar>
-                    </a>
+                <v-btn icon size="small" class="ml-2" @click="this.$defaultWindow.location.href='{% url 'logout' %}'">
+                    <v-avatar color="brown">
+                        {{ user.username|slice:":2" }}
+                    </v-avatar>
                 </v-btn>
 
 {#                <v-btn#}
@@ -67,7 +65,7 @@
 
         const vuetify = createVuetify()
 
-        createApp({
+        const app = createApp({
             delimiters: ['[[', ']]'],
             data() {
               return {
@@ -81,12 +79,17 @@
                     this.theme = this.theme === 'light' ? 'dark' : 'light'
                 }
             }
-        }).use(vuetify).mount('#app')
+        }).use(vuetify)
+
+        app.config.globalProperties.$defaultWindow = window
+
+        app.mount('#app')
     </script>
 
     <style>
     a {
         text-decoration: none;
+        color: black;
     }
 
     .main-con {
