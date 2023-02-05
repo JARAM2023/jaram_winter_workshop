@@ -1,5 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 def index(request):
-    print(request.user.is_superuser)
-    return render(request, 'index.html')
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        return render(request, 'index.html')
+
+def login(request):
+    return render(request, 'login.html')
