@@ -60,6 +60,8 @@
                     </v-card>
                     {% endblock %}
                 </div>
+                {% block snakbar %}
+                {% endblock %}
             </v-main>
         </v-app>
     </div>
@@ -80,7 +82,8 @@
                     file_sub_rule: [value => {
                         if (value.length <= 0) return '파일을 선택해 주세요'
                         return true
-                    }]
+                    }],
+                    snackbar: false,
                 }
             },
             methods: {
@@ -90,6 +93,9 @@
                 {% block index_methods %}
                 {% endblock %}
             },
+            mounted() {
+                this.snackbar = true
+            }
         }).use(vuetify)
 
         app.config.globalProperties.$defaultWindow = window

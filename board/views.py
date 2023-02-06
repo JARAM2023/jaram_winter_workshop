@@ -85,10 +85,15 @@ def page_submit(request):
                 'is_selected': is_selected
             })
 
-        return render(request, 'submit.html', {
+        context = {
             'team_users': team_users,
             'submit_log': team_submit
-        })
+        }
+        if 'message' in request.session:
+            context['message'] = request.session['message']
+            del request.session['message']
+
+        return render(request, 'submit.html', context)
 
 def form_submission(request):
     if request.user.is_anonymous:
@@ -101,9 +106,17 @@ def form_submission(request):
             change_name = get_random_string(20)
         file.name = change_name
 
-        answer = pandas.read_csv('./static/new_weather_data_test_y.csv', index_col=0)['weather'].values
-        submission = pandas.read_csv(io.StringIO(request.FILES['file_data'].read().decode('utf-8')), index_col=0)['weather'].values
-        submit_score = sum(answer == submission) / len(answer)
+        try:
+            answer = pandas.read_csv('./static/new_weather_data_test_y.csv', index_col=0)
+            submission = pandas.read_csv(io.StringIO(request.FILES['file_data'].read().decode('utf-8')), index_col=0)
+            assert answer.shape == submission.shape
+
+            answer = answer['weather'].values
+            submission = submission['weather'].values
+            submit_score = sum(answer == submission) / len(answer)
+        except:
+            request.session['message'] = '파일 제출 과정에서 오류가 발생했습니다.'
+            return redirect('submit')
 
         sub = SubmitResult(
             submit_file=request.FILES['file_data'],

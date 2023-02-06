@@ -96,3 +96,6 @@ onTableClicked() {
     console.log(3232)
 }
 {% endblock %}
+{% block snakbar %}
+    {% if message %}<v-snackbar v-model="snackbar" color="red">{{ message }}</v-snackbar>{% endif %}
+{% endblock %}
