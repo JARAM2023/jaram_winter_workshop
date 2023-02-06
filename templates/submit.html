@@ -1,4 +1,72 @@
 {% extends 'index.html' %}
 {% block index_content %}
-    submit
+    <v-card>
+        <v-card-title>팀원</v-card-title>
+        <team-list></team-list>
+    </v-card>
+    <v-card>
+        <v-card-title>제출기록</v-card-title>
+        <sub-log></sub-log>
+    </v-card>
+    <v-card variant="outlined">
+        <v-card-title>제출하기</v-card-title>
+        <v-card-item>
+            <div class="d-flex flex-column justify-center align-center">
+                <div class="w-100 mt-2">
+                    <v-form method="post" action="{% url 'form_login' %}">
+                        {% csrf_token %}
+                      <v-file-input label="csv 파일" accept=".csv"></v-file-input>
+
+                      <v-btn type="submit" block class="mt-2">제출하기</v-btn>
+                    </v-form>
+                </div>
+            </div>
+        </v-card-item>
+    </v-card>
+{% endblock %}
+{% block index_js %}
+    app.component('team-list', {
+          template: `<v-table>
+            <thead>
+                <tr>
+                <th class="text-left">
+                이름
+                </th>
+                <th class="text-left">
+                최근 제출 시각
+                </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in team_users %}
+                    <tr>
+                        <td>{{ u.name }}</td>
+                        <td>{{ u.last_submit }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </v-table>`,
+        })
+    app.component('sub-log', {
+          template: `<v-table>
+            <thead>
+                <tr>
+                <th class="text-left">
+                이름
+                </th>
+                <th class="text-left">
+                최근 제출 시각
+                </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in team_users %}
+                    <tr>
+                        <td>{{ u.name }}</td>
+                        <td>{{ u.last_submit }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </v-table>`,
+        })
 {% endblock %}

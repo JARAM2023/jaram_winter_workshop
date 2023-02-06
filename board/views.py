@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.http.response import HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
 from .models import (
-    Explain
+    Explain,
+    Team,
+SubmitResult
 )
 
 import markdown
@@ -15,7 +17,6 @@ def page_index(request):
         index_data = Explain.objects.get(explain_id='index_data').explain_text
         index_cont = markdown.markdown(index_cont)
         index_data = markdown.markdown(index_data)
-        print(index_cont)
         return render(request, 'index.html', {
             'index_cont': index_cont,
             'index_data': index_data
@@ -44,7 +45,22 @@ def page_team(request):
     return render(request, 'team.html')
 
 def page_submit(request):
-    return render(request, 'submit.html')
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        team_instance = request.user.team_user.all()[0]
+        team_users = []
+        for u in team_instance.team_member.all():
+            name = u.username
+            last_submit = u.submit_user.all().order_by('-submit_create')
+            if last_submit:
+                last_submit = last_submit[0].submit_create
+            else:
+                last_submit = None
+            team_users.append({'name': name, 'last_submit': last_submit})
+        return render(request, 'submit.html', {
+            'team_users': team_users
+        })
 
 def form_login(request):
     if request.method == 'POST':

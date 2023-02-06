@@ -26,8 +26,8 @@
 {#                @click="onClick"></v-btn>#}
             </v-app-bar>
 
-            <v-main class="d-flex flex-column align-center ">
-                <div class="main-con pa-5 w-100">
+            <v-main class="d-flex flex-column align-center">
+                <div class="d-flex flex-column main-con pa-5 w-100">
                     {% block index_content %}
                     <v-card>
                         <v-tabs
@@ -88,6 +88,9 @@
 
         app.config.globalProperties.$defaultWindow = window
 
+        {% block index_js %}
+        {% endblock %}
+
         app.mount('#app')
     </script>
 
@@ -98,7 +101,8 @@
     }
 
     .main-con {
-        max-width: 800px;
+        max-width: 1000px;
+        gap: 20px;
     }
     </style>
 {% endblock %}
