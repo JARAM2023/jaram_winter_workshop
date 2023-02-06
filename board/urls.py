@@ -6,7 +6,8 @@ from .views import (
     page_logout,
     page_leader,
     page_team,
-    page_submit
+    page_submit,
+    form_submission
 )
 
 urlpatterns = [
@@ -15,6 +16,7 @@ urlpatterns = [
     path('rank/', page_leader, name='leader'),
     path('team/', page_team, name='team'),
     path('submit/', page_submit, name='submit'),
+    path('submit/process', form_submission, name='form_submit'),
     path('login/', page_login, name='login'),
     path("login/process/", form_login, name="form_login"),
     path("logout/process/", page_logout, name="logout"),

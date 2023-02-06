@@ -77,6 +77,10 @@
                     message: 'Hello Vue!',
                     theme: 'light',
                     tab: null,
+                    file_sub_rule: [value => {
+                        if (value.length <= 0) return '파일을 선택해 주세요'
+                        return true
+                    }]
                 }
             },
             methods: {

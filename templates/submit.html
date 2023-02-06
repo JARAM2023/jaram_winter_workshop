@@ -13,9 +13,12 @@
         <v-card-item>
             <div class="d-flex flex-column justify-center align-center">
                 <div class="w-100 mt-2">
-                    <v-form method="post" action="{% url 'form_login' %}">
+                    <v-form method="post" action="{% url 'form_submit' %}" enctype="multipart/form-data">
                         {% csrf_token %}
-                      <v-file-input label="csv 파일" accept=".csv"></v-file-input>
+                      <v-file-input label="csv 파일" accept=".csv"
+                        :rules="file_sub_rule"
+                        name="file_data"
+                      ></v-file-input>
 
                       <v-btn type="submit" block class="mt-2">제출하기</v-btn>
                     </v-form>

@@ -10,6 +10,7 @@ class Team(models.Model):
 class SubmitResult(models.Model):
     submit_pk = models.AutoField(primary_key=True)
     submit_file = models.FileField(upload_to="submits/")
+    submit_name = models.CharField(max_length=256)
     submit_team_pk = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="submit_team")
     submit_user_pk = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submit_user", null=True)
     submit_score = models.DecimalField(decimal_places=4, max_digits=6)
