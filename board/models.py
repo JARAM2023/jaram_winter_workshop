@@ -15,11 +15,12 @@ class SubmitResult(models.Model):
     submit_user_pk = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submit_user", null=True)
     submit_score = models.DecimalField(decimal_places=4, max_digits=6)
     submit_create = models.DateTimeField(auto_now_add=True)
+    submit_leader = models.BooleanField(default=False)
 
-class LeaderBoard(models.Model):
+class LeaderTime(models.Model):
     leader_pk = models.AutoField(primary_key=True)
-    leader_submit_pk = models.OneToOneField(SubmitResult, related_name='leader_submit', on_delete=models.CASCADE)
-    leader_create = models.DateTimeField(auto_now_add=True)
+    leader_team = models.OneToOneField(Team, related_name='leader_team', on_delete=models.CASCADE)
+    leader_create = models.DateTimeField(auto_now=True)
 
 class Explain(models.Model):
     explain_pk = models.AutoField(primary_key=True)

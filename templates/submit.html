@@ -50,6 +50,7 @@
             </tbody>
         </v-table>`,
         })
+    selected = ['red']
     app.component('sub-log', {
           template: `<v-table>
             <thead>
@@ -78,7 +79,7 @@
                 {% for s in submit_log %}
                     <tr style="cursor:pointer;" @click="() => {
                         if ($defaultWindow.confirm('{{ s.sub_num }}번 데이터를 리더보드에 제출하시겠습니까? 정확도는 {{ s.score }}입니다.')) {
-
+                            $defaultWindow.location.href = '{% url 'form_leader' %}?sub_pk={{ s.sub_num }}'
                         }
                     }">
                         <td class="text-center">{{ s.sub_num }}</td>
@@ -86,7 +87,11 @@
                         <td class="text-center">{{ s.file_name }}</td>
                         <td class="text-center">{{ s.score }}</td>
                         <td class="text-center">{{ s.create_time }}</td>
-                        <td class="text-right" ><v-checkbox-btn :disabled="true" :value="{{ s.is_selected }}"></v-checkbox-btn></td>
+                        <td class="text-right" >
+                            <div class="line">
+                                <input type="checkbox" class="my-checkbox" {% if s.is_selected %}checked{% endif %} disabled="true" />
+                            </div>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

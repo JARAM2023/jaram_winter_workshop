@@ -6,7 +6,7 @@ from .models import (
     Explain,
     Team,
     SubmitResult,
-    LeaderBoard
+    LeaderTime
 )
 
 import markdown
@@ -68,18 +68,13 @@ def page_submit(request):
         for l in team_sub_log:
             create_time = l.submit_create
             create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
-            is_selected = LeaderBoard.objects.filter(leader_submit_pk=l)
-            if is_selected:
-                is_selected = True
-            else:
-                is_selected = False
             team_submit.append({
                 'sub_num': l.submit_pk,
                 'file_name': l.submit_name,
                 'submitter': l.submit_user_pk.username,
                 'score': l.submit_score,
                 'create_time': create_time,
-                'is_selected': is_selected
+                'is_selected': bool(l.submit_leader)
             })
 
         context = {
@@ -125,6 +120,28 @@ def form_submission(request):
         sub.save()
         return redirect('submit')
     else:
+        request.session['message'] = '파일 제출 과정에서 오류가 발생했습니다.'
+        return redirect('submit')
+
+def form_leader(request):
+    if request.user.is_anonymous:
+        return redirect('login')
+    elif request.method == 'GET' and request.GET['sub_pk']:
+        sub_pk = request.GET['sub_pk']
+        target_sub = SubmitResult.objects.filter(submit_pk=sub_pk)
+        if target_sub:
+            team_sub_log = SubmitResult.objects.filter(submit_team_pk=request.user.team_user.all()[0])
+            for t in team_sub_log:
+                t.submit_leader = False
+                t.save()
+            target_sub[0].submit_leader = True
+            target_sub[0].save()
+            return redirect('submit')
+        else:
+            request.session['message'] = '리더보드 등록 과정에서 오류가 발생했습니다.'
+            return redirect('submit')
+    else:
+        request.session['message'] = '리더보드 등록 과정에서 오류가 발생했습니다.'
         return redirect('submit')
 
 def form_login(request):
