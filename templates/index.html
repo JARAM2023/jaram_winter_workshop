@@ -20,7 +20,7 @@
                 </v-btn>
                 <v-btn icon size="small" class="ml-2" @click="this.$defaultWindow.location.href='{% url 'logout' %}'">
                     <v-avatar color="brown">
-                        {{ user.username|slice:":2" }}
+                        {{ user.last_name |slice:":2" }}
                     </v-avatar>
                 </v-btn>
 
@@ -44,11 +44,15 @@
                         <v-card-text>
                             <v-window v-model="tab">
                             <v-window-item value="one">
-                              One
+                                <article class="markdown-body">
+                                    {% autoescape off %}
+                                    {{ index_cont }}
+                                    {% endautoescape %}
+                                </article>
                             </v-window-item>
 
                             <v-window-item value="two">
-                              Two
+                                dddd
                             </v-window-item>
                             </v-window>
                         </v-card-text>
@@ -68,18 +72,18 @@
         const app = createApp({
             delimiters: ['[[', ']]'],
             data() {
-              return {
-                message: 'Hello Vue!',
-                theme: 'light',
-                tab: null,
-              }
+                return {
+                    message: 'Hello Vue!',
+                    theme: 'light',
+                    tab: null,
+                }
             },
             methods: {
                 onClick () {
                     this.theme = this.theme === 'light' ? 'dark' : 'light'
                 }
-            }
-        }).use(vuetify)
+            },
+        }).use(vuetify).use(VueShowdownPlugin)
 
         app.config.globalProperties.$defaultWindow = window
 

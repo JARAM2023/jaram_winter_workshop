@@ -16,3 +16,12 @@ class SubmitResult(models.Model):
 class LeaderBoard(models.Model):
     leader_pk = models.AutoField(primary_key=True)
     leader_submit_pk = models.OneToOneField(SubmitResult, related_name='leader_submit', on_delete=models.CASCADE)
+
+class Explain(models.Model):
+    explain_pk = models.AutoField(primary_key=True)
+    explain_id = models.CharField(max_length=10)
+    explain_text = models.TextField()
+
+class Image(models.Model):
+    image_pk = models.AutoField(primary_key=True)
+    image_data = models.ImageField(upload_to='')

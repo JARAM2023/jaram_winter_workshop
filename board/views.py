@@ -1,12 +1,22 @@
 from django.shortcuts import render, redirect
 from django.http.response import HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
+from .models import (
+    Explain
+)
+
+import markdown
 
 def page_index(request):
     if request.user.is_anonymous:
         return redirect('login')
     else:
-        return render(request, 'index.html')
+        index_cont = Explain.objects.get(explain_id='index_cont').explain_text
+        index_cont = markdown.markdown(index_cont)
+        print(index_cont)
+        return render(request, 'index.html', {
+            'index_cont': index_cont
+        })
 
 def page_login(request):
     if request.user.is_anonymous:
