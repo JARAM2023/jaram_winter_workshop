@@ -46,9 +46,6 @@ def page_logout(request):
 def page_leader(request):
     return render(request, 'leader.html')
 
-def page_team(request):
-    return render(request, 'team.html')
-
 def page_submit(request):
     if request.user.is_anonymous:
         return redirect('login')

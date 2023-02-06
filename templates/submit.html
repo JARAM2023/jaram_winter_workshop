@@ -77,7 +77,9 @@
             <tbody>
                 {% for s in submit_log %}
                     <tr style="cursor:pointer;" @click="() => {
-                        $defaultWindow.console.log({{ s.score }})
+                        if ($defaultWindow.confirm('{{ s.sub_num }}번 데이터를 리더보드에 제출하시겠습니까? 정확도는 {{ s.score }}입니다.')) {
+
+                        }
                     }">
                         <td class="text-center">{{ s.sub_num }}</td>
                         <td class="text-center">{{ s.submitter }}</td>
