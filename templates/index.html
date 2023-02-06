@@ -86,7 +86,9 @@
             methods: {
                 onClick () {
                     this.theme = this.theme === 'light' ? 'dark' : 'light'
-                }
+                },
+                {% block index_methods %}
+                {% endblock %}
             },
         }).use(vuetify)
 

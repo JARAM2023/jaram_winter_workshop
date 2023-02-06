@@ -64,8 +64,22 @@ def page_submit(request):
                 last_submit = None
             team_users.append({'name': name, 'last_submit': last_submit})
 
+        team_sub_log = SubmitResult.objects.filter(submit_team_pk=request.user.team_user.all()[0])
+        team_sub_log = team_sub_log.order_by('-submit_score')
+        team_submit = []
+        for l in team_sub_log:
+            create_time = l.submit_create
+            create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
+            team_submit.append({
+                'file_name': l.submit_name,
+                'submitter': l.submit_user_pk.username,
+                'score': l.submit_score,
+                'create_time': create_time
+            })
+
         return render(request, 'submit.html', {
-            'team_users': team_users
+            'team_users': team_users,
+            'submit_log': team_submit
         })
 
 def form_submission(request):

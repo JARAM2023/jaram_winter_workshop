@@ -55,21 +55,38 @@
             <thead>
                 <tr>
                 <th class="text-left">
-                이름
+                제출자
                 </th>
-                <th class="text-left">
-                최근 제출 시각
+                <th class="text-center">
+                파일 이름
+                </th>
+                <th class="text-center">
+                점수
+                </th>
+                <th class="text-center">
+                제출 시각
+                </th>
+                <th class="text-right">
+                리더보드 제출
                 </th>
                 </tr>
             </thead>
             <tbody>
-                {% for u in team_users %}
-                    <tr>
-                        <td>{{ u.name }}</td>
-                        <td>{{ u.last_submit }}</td>
+                {% for s in submit_log %}
+                    <tr style="cursor:pointer;" @click="$defaultWindow.console.log({{ s.score }})">
+                        <td>{{ s.submitter }}</td>
+                        <td class="text-center">{{ s.file_name }}</td>
+                        <td class="text-center">{{ s.score }}</td>
+                        <td class="text-center">{{ s.create_time }}</td>
+                        <td class="text-right" ><v-checkbox-btn :disabled="true"></v-checkbox-btn></td>
                     </tr>
                 {% endfor %}
             </tbody>
-        </v-table>`,
+        </v-table>`
         })
+{% endblock %}
+{% block index_methods %}
+onTableClicked() {
+    console.log(3232)
+}
 {% endblock %}
