@@ -54,7 +54,10 @@
           template: `<v-table>
             <thead>
                 <tr>
-                <th class="text-left">
+                <th class="text-center">
+                번호
+                </th>
+                <th class="text-center">
                 제출자
                 </th>
                 <th class="text-center">
@@ -73,12 +76,15 @@
             </thead>
             <tbody>
                 {% for s in submit_log %}
-                    <tr style="cursor:pointer;" @click="$defaultWindow.console.log({{ s.score }})">
-                        <td>{{ s.submitter }}</td>
+                    <tr style="cursor:pointer;" @click="() => {
+                        $defaultWindow.console.log({{ s.score }})
+                    }">
+                        <td class="text-center">{{ s.sub_num }}</td>
+                        <td class="text-center">{{ s.submitter }}</td>
                         <td class="text-center">{{ s.file_name }}</td>
                         <td class="text-center">{{ s.score }}</td>
                         <td class="text-center">{{ s.create_time }}</td>
-                        <td class="text-right" ><v-checkbox-btn :disabled="true"></v-checkbox-btn></td>
+                        <td class="text-right" ><v-checkbox-btn :disabled="true" :value="{{ s.is_selected }}"></v-checkbox-btn></td>
                     </tr>
                 {% endfor %}
             </tbody>

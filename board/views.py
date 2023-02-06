@@ -5,7 +5,8 @@ from django.utils.crypto import get_random_string
 from .models import (
     Explain,
     Team,
-SubmitResult
+    SubmitResult,
+    LeaderBoard
 )
 
 import markdown
@@ -70,11 +71,18 @@ def page_submit(request):
         for l in team_sub_log:
             create_time = l.submit_create
             create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
+            is_selected = LeaderBoard.objects.filter(leader_submit_pk=l)
+            if is_selected:
+                is_selected = True
+            else:
+                is_selected = False
             team_submit.append({
+                'sub_num': l.submit_pk,
                 'file_name': l.submit_name,
                 'submitter': l.submit_user_pk.username,
                 'score': l.submit_score,
-                'create_time': create_time
+                'create_time': create_time,
+                'is_selected': is_selected
             })
 
         return render(request, 'submit.html', {
