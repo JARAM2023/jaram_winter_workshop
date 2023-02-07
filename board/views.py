@@ -15,6 +15,8 @@ import pandas
 import os
 import io
 
+least_leader_time_sec = 30
+
 def page_index(request):
     if request.user.is_anonymous:
         return redirect('login')
@@ -82,6 +84,15 @@ def page_submit(request):
             'team_users': team_users,
             'submit_log': team_submit
         }
+
+        last_submit = LeaderTime.objects.filter(leader_team=team_instance)
+        context['last_leader'] = f'리더보드 등록이 가능합니다.'
+        if last_submit:
+            diff = now() - last_submit[0].leader_create
+            if diff.seconds < least_leader_time_sec:
+                context['last_leader'] = f'리더보드 등록은 팀당 {least_leader_time_sec}초에 한번만 가능합니다. 현재 {least_leader_time_sec - diff.seconds}초 남았습니다.'
+
+
         if 'message' in request.session:
             context['message'] = request.session['message']
             del request.session['message']
@@ -132,8 +143,8 @@ def form_leader(request):
         last_submit = LeaderTime.objects.filter(leader_team=team_instance)
         if last_submit:
             diff = now() - last_submit[0].leader_create
-            if diff.seconds < 30:
-                request.session['message'] = f'리더보드 등록은 팀당 30초에 한번만 가능합니다. 현재 {30 - diff.seconds}초 남았습니다.'
+            if diff.seconds < least_leader_time_sec:
+                request.session['message'] = f'리더보드 등록은 팀당 {least_leader_time_sec}초에 한번만 가능합니다. 현재 {least_leader_time_sec - diff.seconds}초 남았습니다.'
                 return redirect('submit')
         sub_pk = request.GET['sub_pk']
         target_sub = SubmitResult.objects.filter(submit_pk=sub_pk)

@@ -7,6 +7,7 @@
     <v-card>
         <v-card-title>제출기록</v-card-title>
         <sub-log></sub-log>
+        <v-card-item>{{ last_leader }}</v-card-item>
     </v-card>
     <v-card variant="outlined">
         <v-card-title>제출하기</v-card-title>
@@ -77,11 +78,14 @@
             </thead>
             <tbody>
                 {% for s in submit_log %}
-                    <tr style="cursor:pointer;" @click="() => {
-                        if ($defaultWindow.confirm('{{ s.sub_num }}번 데이터를 리더보드에 제출하시겠습니까? 정확도는 {{ s.score }}입니다.')) {
-                            $defaultWindow.location.href = '{% url 'form_leader' %}?sub_pk={{ s.sub_num }}'
-                        }
-                    }">
+                    <tr style="cursor:pointer;"
+                        {% if not s.is_selected %}
+                            @click="() => {
+                                if ($defaultWindow.confirm('{{ s.sub_num }}번 데이터를 리더보드에 제출하시겠습니까? 정확도는 {{ s.score }}입니다.')) {
+                                    $defaultWindow.location.href = '{% url 'form_leader' %}?sub_pk={{ s.sub_num }}'
+                                }
+                            }"
+                        {% endif %}>
                         <td class="text-center">{{ s.sub_num }}</td>
                         <td class="text-center">{{ s.submitter }}</td>
                         <td class="text-center">{{ s.file_name }}</td>
