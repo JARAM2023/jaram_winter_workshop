@@ -1,10 +1,10 @@
 {% extends 'index.html' %}
 {% block index_content %}
-    <v-card>
+    <v-card variant="outlined">
         <v-card-title>팀원</v-card-title>
         <team-list></team-list>
     </v-card>
-    <v-card>
+    <v-card variant="outlined">
         <v-card-title>제출기록</v-card-title>
         <sub-log></sub-log>
         <v-card-item>{{ last_leader }}</v-card-item>
@@ -33,10 +33,10 @@
           template: `<v-table>
             <thead>
                 <tr>
-                <th class="text-left">
+                <th class="text-center">
                 이름
                 </th>
-                <th class="text-left">
+                <th class="text-center">
                 최근 제출 시각
                 </th>
                 </tr>
@@ -44,8 +44,8 @@
             <tbody>
                 {% for u in team_users %}
                     <tr>
-                        <td>{{ u.name }}</td>
-                        <td>{{ u.last_submit }}</td>
+                        <td class="text-center">{{ u.name }}</td>
+                        <td class="text-center">{{ u.last_submit }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

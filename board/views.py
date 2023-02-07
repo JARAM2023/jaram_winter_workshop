@@ -47,7 +47,23 @@ def page_logout(request):
     return redirect('login')
 
 def page_leader(request):
-    return render(request, 'leader.html')
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        leaderboard = SubmitResult.objects.filter(submit_leader=True).order_by('-submit_score', 'submit_create')
+        team_submit = []
+        for l in leaderboard:
+            create_time = l.submit_create
+            create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
+            team_submit.append({
+                'team_name': l.submit_team_pk.team_name,
+                'score': l.submit_score,
+                'create_time': create_time,
+            })
+        context = {
+            'submit_log': team_submit
+        }
+        return render(request, 'leader.html', context)
 
 def page_submit(request):
     if request.user.is_anonymous:

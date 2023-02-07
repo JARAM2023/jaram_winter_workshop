@@ -1,4 +1,39 @@
 {% extends 'index.html' %}
 {% block index_content %}
-    leader
+    <v-card variant="outlined">
+        <v-card-title>리더보드</v-card-title>
+        <leaderboard></leaderboard>
+    </v-card>
+{% endblock %}
+{% block index_js %}
+    app.component('leaderboard', {
+          template: `<v-table>
+            <thead>
+                <tr>
+                <th class="text-center">
+                순위
+                </th>
+                <th class="text-center">
+                팀
+                </th>
+                <th class="text-center">
+                점수
+                </th>
+                <th class="text-center">
+                제출 시각
+                </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in submit_log %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td class="text-center">{{ u.team_name }}</td>
+                        <td class="text-center">{{ u.score }}</td>
+                        <td class="text-center">{{ u.create_time }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </v-table>`,
+        })
 {% endblock %}
