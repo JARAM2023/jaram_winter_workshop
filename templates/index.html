@@ -15,11 +15,49 @@
                 <v-btn @click="this.$defaultWindow.location.href='{% url 'submit' %}'">
                     제출
                 </v-btn>
-                <v-btn icon size="small" class="ml-2" @click="this.$defaultWindow.location.href='{% url 'logout' %}'">
-                    <v-avatar color="brown">
-                        {{ user.last_name |slice:":2" }}
-                    </v-avatar>
-                </v-btn>
+                <v-menu
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    location="end">
+                    <template v-slot:activator="{ props }">
+{#                    <v-btn v-bind="props" icon size="small" class="ml-2" @click="this.$defaultWindow.location.href='{% url 'logout' %}'">#}
+                    <v-btn v-bind="props" icon size="small" class="ml-2">
+                        <v-avatar color="brown">
+                            {{ user.username |slice:":2" }}
+                        </v-avatar>
+                    </v-btn>
+                    </template>
+
+                    <v-card>
+                        <v-list>
+                            <v-list-item
+                                title="{{ user.get_full_name}}"
+                                subtitle="{{ user.username }}">
+                            </v-list-item>
+                        </v-list>
+
+                        <v-divider></v-divider>
+
+                        <v-list>
+                            <v-list-item>
+                                <v-btn
+                                    class="w-100"
+                                    variant="text"
+                                    @click="this.$defaultWindow.location.href='{% url 'password_change' %}'">
+                                    비밀번호 변경
+                                </v-btn>
+                            </v-list-item>
+                            <v-list-item>
+                                <v-btn
+                                    class="w-100"
+                                    variant="text"
+                                    @click="this.$defaultWindow.location.href='{% url 'logout' %}'">
+                                        로그아웃
+                                </v-btn>
+                            </v-list-item>
+                        </v-list>
+                    </v-card>
+                </v-menu>
 
 {#                <v-btn#}
 {#                :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"#}
@@ -76,7 +114,6 @@
             delimiters: ['[[', ']]'],
             data() {
                 return {
-                    message: 'Hello Vue!',
                     theme: 'light',
                     tab: null,
                     file_sub_rule: [value => {
@@ -84,6 +121,10 @@
                         return true
                     }],
                     snackbar: false,
+      fav: true,
+      menu: false,
+      message: false,
+      hints: true,
                 }
             },
             methods: {

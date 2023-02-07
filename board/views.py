@@ -72,51 +72,65 @@ def page_submit(request):
     if request.user.is_anonymous:
         return redirect('login')
     else:
-        team_instance = request.user.team_user.all()[0]
-        team_users = []
-        for u in team_instance.team_member.all():
-            name = u.username
-            last_submit = u.submit_user.all().order_by('-submit_create')
+        team_instance = request.user.team_user.all()
+        if team_instance:
+            team_instance = team_instance[0]
+            team_users = []
+            for u in team_instance.team_member.all():
+                name = u.username
+                last_submit = u.submit_user.all().order_by('-submit_create')
+                if last_submit:
+                    last_submit = last_submit[0].submit_create
+                    last_submit = f'{last_submit.day}일 {last_submit.hour}시 {last_submit.minute}분 {last_submit.second}초'
+                else:
+                    last_submit = None
+                team_users.append({'name': name, 'last_submit': last_submit})
+
+            team_sub_log = SubmitResult.objects.filter(submit_team_pk=request.user.team_user.all()[0])
+            team_sub_log = team_sub_log.order_by('-submit_score')
+            team_submit = []
+            for l in team_sub_log:
+                create_time = l.submit_create
+                create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
+                team_submit.append({
+                    'sub_num': l.submit_pk,
+                    'file_name': l.submit_name,
+                    'submitter': l.submit_user_pk.username,
+                    'score': l.submit_score,
+                    'create_time': create_time,
+                    'is_selected': bool(l.submit_leader),
+                })
+
+            context = {
+                'team_users': team_users,
+                'submit_log': team_submit
+            }
+
+            last_submit = LeaderTime.objects.filter(leader_team=team_instance)
+            context['last_leader'] = f'리더보드 등록이 가능합니다.'
             if last_submit:
-                last_submit = last_submit[0].submit_create
-                last_submit = f'{last_submit.day}일 {last_submit.hour}시 {last_submit.minute}분 {last_submit.second}초'
-            else:
-                last_submit = None
-            team_users.append({'name': name, 'last_submit': last_submit})
-
-        team_sub_log = SubmitResult.objects.filter(submit_team_pk=request.user.team_user.all()[0])
-        team_sub_log = team_sub_log.order_by('-submit_score')
-        team_submit = []
-        for l in team_sub_log:
-            create_time = l.submit_create
-            create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
-            team_submit.append({
-                'sub_num': l.submit_pk,
-                'file_name': l.submit_name,
-                'submitter': l.submit_user_pk.username,
-                'score': l.submit_score,
-                'create_time': create_time,
-                'is_selected': bool(l.submit_leader),
-            })
-
-        context = {
-            'team_users': team_users,
-            'submit_log': team_submit
-        }
-
-        last_submit = LeaderTime.objects.filter(leader_team=team_instance)
-        context['last_leader'] = f'리더보드 등록이 가능합니다.'
-        if last_submit:
-            diff = now() - last_submit[0].leader_create
-            if diff.seconds < least_leader_time_sec:
-                context['last_leader'] = f'리더보드 등록은 팀당 {least_leader_time_sec}초에 한번만 가능합니다. 현재 {least_leader_time_sec - diff.seconds}초 남았습니다.'
+                diff = now() - last_submit[0].leader_create
+                if diff.seconds < least_leader_time_sec:
+                    context['last_leader'] = f'리더보드 등록은 팀당 {least_leader_time_sec}초에 한번만 가능합니다. 현재 {least_leader_time_sec - diff.seconds}초 남았습니다.'
 
 
-        if 'message' in request.session:
-            context['message'] = request.session['message']
-            del request.session['message']
+            if 'message' in request.session:
+                context['message'] = request.session['message']
+                del request.session['message']
 
-        return render(request, 'submit.html', context)
+            return render(request, 'submit.html', context)
+        else:
+            request.session['message'] = '팀에 소속되지 않은 사용자입니다.'
+            return redirect('login')
+
+def page_change_password(request):
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        return render(request, 'password.html')
+
+def form_change_password(request):
+    pass
 
 def form_submission(request):
     if request.user.is_anonymous:
