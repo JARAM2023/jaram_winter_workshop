@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http.response import HttpResponseBadRequest
 from django.contrib.auth import authenticate, login, logout
 from django.utils.crypto import get_random_string
+from django.utils.timezone import now
 from .models import (
     Explain,
     Team,
@@ -107,7 +108,7 @@ def form_submission(request):
             submission = submission['weather'].values
             submit_score = sum(answer == submission) / len(answer)
         except:
-            request.session['message'] = '파일 제출 과정에서 오류가 발생했습니다.'
+            request.session['message'] = '파일 제출 과정에서 오류가 발생했거나 형식이 다릅니다.'
             return redirect('submit')
 
         sub = SubmitResult(
@@ -127,6 +128,13 @@ def form_leader(request):
     if request.user.is_anonymous:
         return redirect('login')
     elif request.method == 'GET' and request.GET['sub_pk']:
+        team_instance = request.user.team_user.all()[0]
+        last_submit = LeaderTime.objects.filter(leader_team=team_instance)
+        if last_submit:
+            diff = now() - last_submit[0].leader_create
+            if diff.seconds < 30:
+                request.session['message'] = f'리더보드 등록은 팀당 30초에 한번만 가능합니다. 현재 {30 - diff.seconds}초 남았습니다.'
+                return redirect('submit')
         sub_pk = request.GET['sub_pk']
         target_sub = SubmitResult.objects.filter(submit_pk=sub_pk)
         if target_sub:
@@ -136,6 +144,10 @@ def form_leader(request):
                 t.save()
             target_sub[0].submit_leader = True
             target_sub[0].save()
+            if last_submit:
+                last_submit[0].delete()
+            leader = LeaderTime(leader_team=team_instance)
+            leader.save()
             return redirect('submit')
         else:
             request.session['message'] = '리더보드 등록 과정에서 오류가 발생했습니다.'
