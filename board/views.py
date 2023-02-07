@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http.response import HttpResponseBadRequest
+from django.contrib.auth.password_validation import MinimumLengthValidator
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import check_password
 from django.utils.crypto import get_random_string
 from django.utils.timezone import now
 from .models import (
@@ -127,10 +128,41 @@ def page_change_password(request):
     if request.user.is_anonymous:
         return redirect('login')
     else:
+        if 'message' in request.session:
+            msg = request.session['message']
+            del request.session['message']
+            return render(request, 'password.html', {'message': msg})
         return render(request, 'password.html')
 
 def form_change_password(request):
-    pass
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        if request.method == 'POST':
+            text_password = request.POST['text_password']
+            user = request.user
+            if check_password(text_password, user.password):
+                new_password = request.POST['new_password']
+                new_password_check = request.POST['new_password_check']
+                if new_password_check == new_password:
+                    try:
+                        validator = MinimumLengthValidator(min_length=6)
+                        validator.validate(new_password)
+                    except:
+                        request.session['message'] = '비밀번호는 6자리 이상이어야 합니다.'
+                        return redirect('password_change')
+                    user.set_password(new_password)
+                    user.save()
+                    return redirect('index')
+                else:
+                    request.session['message'] = '재입력한 비밀번호가 다릅니다.'
+                    return redirect('password_change')
+            else:
+                request.session['message'] = '기존 비밀번호가 틀립니다.'
+                return redirect('password_change')
+        else:
+            request.session['message'] = 'request error.'
+            return redirect('password_change')
 
 def form_submission(request):
     if request.user.is_anonymous:

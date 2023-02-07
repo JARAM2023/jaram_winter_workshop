@@ -8,7 +8,8 @@ from .views import (
     page_submit,
     form_submission,
     form_leader,
-    page_change_password
+    page_change_password,
+    form_change_password
 )
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
     path("login/process/", form_login, name="form_login"),
     path("logout/process/", page_logout, name="logout"),
     path("accout/", page_change_password, name="password_change"),
+    path("accout/process", form_change_password, name="form_password_change"),
 ]
