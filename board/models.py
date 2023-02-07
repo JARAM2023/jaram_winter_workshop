@@ -12,7 +12,7 @@ class SubmitResult(models.Model):
     submit_file = models.FileField(upload_to="submits/")
     submit_name = models.CharField(max_length=256)
     submit_team_pk = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="submit_team")
-    submit_user_pk = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submit_user", null=True)
+    submit_user_pk = models.ForeignKey(User, on_delete=models.CASCADE, related_name="submit_user")
     submit_score = models.DecimalField(decimal_places=4, max_digits=6)
     submit_create = models.DateTimeField(auto_now_add=True)
     submit_leader = models.BooleanField(default=False)
@@ -21,6 +21,7 @@ class LeaderTime(models.Model):
     leader_pk = models.AutoField(primary_key=True)
     leader_team = models.OneToOneField(Team, related_name='leader_team', on_delete=models.CASCADE)
     leader_create = models.DateTimeField(auto_now=True)
+    leader_count = models.IntegerField()
 
 class Explain(models.Model):
     explain_pk = models.AutoField(primary_key=True)

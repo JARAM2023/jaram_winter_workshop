@@ -53,12 +53,15 @@ def page_leader(request):
         leaderboard = SubmitResult.objects.filter(submit_leader=True).order_by('-submit_score', 'submit_create')
         team_submit = []
         for l in leaderboard:
-            create_time = l.submit_create
+            team_instance = l.submit_team_pk
+            leader_time_instance = team_instance.leader_team
+            create_time = leader_time_instance.leader_create
             create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
             team_submit.append({
-                'team_name': l.submit_team_pk.team_name,
+                'team_name': team_instance.team_name,
                 'score': l.submit_score,
                 'create_time': create_time,
+                'count': leader_time_instance.leader_count,
             })
         context = {
             'submit_log': team_submit
@@ -93,7 +96,7 @@ def page_submit(request):
                 'submitter': l.submit_user_pk.username,
                 'score': l.submit_score,
                 'create_time': create_time,
-                'is_selected': bool(l.submit_leader)
+                'is_selected': bool(l.submit_leader),
             })
 
         context = {
@@ -158,10 +161,14 @@ def form_leader(request):
         team_instance = request.user.team_user.all()[0]
         last_submit = LeaderTime.objects.filter(leader_team=team_instance)
         if last_submit:
-            diff = now() - last_submit[0].leader_create
+            last_submit = last_submit[0]
+            diff = now() - last_submit.leader_create
             if diff.seconds < least_leader_time_sec:
                 request.session['message'] = f'리더보드 등록은 팀당 {least_leader_time_sec}초에 한번만 가능합니다. 현재 {least_leader_time_sec - diff.seconds}초 남았습니다.'
                 return redirect('submit')
+        else:
+            last_submit = LeaderTime(leader_team=team_instance, leader_count=0)
+            last_submit.save()
         sub_pk = request.GET['sub_pk']
         target_sub = SubmitResult.objects.filter(submit_pk=sub_pk)
         if target_sub:
@@ -171,10 +178,10 @@ def form_leader(request):
                 t.save()
             target_sub[0].submit_leader = True
             target_sub[0].save()
-            if last_submit:
-                last_submit[0].delete()
-            leader = LeaderTime(leader_team=team_instance)
-            leader.save()
+
+            last_submit.leader_count += 1
+            last_submit.save()
+
             return redirect('submit')
         else:
             request.session['message'] = '리더보드 등록 과정에서 오류가 발생했습니다.'

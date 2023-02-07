@@ -22,6 +22,9 @@
                 <th class="text-center">
                 제출 시각
                 </th>
+                <th class="text-center">
+                제출 횟수
+                </th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +34,7 @@
                         <td class="text-center">{{ u.team_name }}</td>
                         <td class="text-center">{{ u.score }}</td>
                         <td class="text-center">{{ u.create_time }}</td>
+                        <td class="text-center">{{ u.count }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
