@@ -29,7 +29,7 @@
             <v-main class="d-flex flex-column align-center">
                 <div class="d-flex flex-column main-con pa-5 w-100">
                     {% block index_content %}
-                    <v-card>
+                    <v-card variant="outlined">
                         <v-tabs
                         v-model="tab"
                         bg-color="primary"
@@ -125,6 +125,11 @@
     .my-checkbox {
         transform: scale(1.5);
         margin-right: 11px;
+    }
+    .v-card-title {
+        --v-theme-primary: 98,0,238;
+        background: rgb(var(--v-theme-primary));
+        color: white;
     }
     </style>
 {% endblock %}
