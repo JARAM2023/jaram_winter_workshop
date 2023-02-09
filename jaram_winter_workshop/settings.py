@@ -33,6 +33,11 @@ else:
     ALLOWED_HOSTS = [
         'leaderboard.jaram.net'
     ]
+    CSRF_TRUSTED_ORIGINS = [
+        'https://leaderboard.jaram.net'
+    ]
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 
 
 # Application definition
