@@ -185,7 +185,8 @@ def form_submission(request):
 
             answer = answer['weather'].values
             submission = submission['weather'].values
-            submit_score = f1_score(answer, submission)
+            submit_score = f1_score(answer, submission, average='weighted')
+            # submit_score = sum(answer == submission) / len(answer) * 100
         except:
             request.session['message'] = '파일 제출 과정에서 오류가 발생했거나 형식이 다릅니다.'
             return redirect('submit')
