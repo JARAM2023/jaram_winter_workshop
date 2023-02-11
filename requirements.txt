@@ -3,3 +3,4 @@ markdown==3.4.1
 pandas==1.5.3
 gunicorn==20.1.0
 mysqlclient==2.1.1
+Pillow==9.2.0

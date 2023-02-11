@@ -16,7 +16,7 @@ import pandas
 import os
 import io
 
-least_leader_time_sec = 30
+least_leader_time_sec = 60 * 60
 
 def page_index(request):
     if request.user.is_anonymous:
@@ -112,7 +112,9 @@ def page_submit(request):
             if last_submit:
                 diff = now() - last_submit[0].leader_create
                 if diff.seconds < least_leader_time_sec:
-                    context['last_leader'] = f'리더보드 등록은 팀당 {least_leader_time_sec}초에 한번만 가능합니다. 현재 {least_leader_time_sec - diff.seconds}초 남았습니다.'
+                    context['last_leader'] = f'리더보드 등록은 팀당 {least_leader_time_sec // 60}분에 한번만 가능합니다. ' \
+                                             f'현재 {(least_leader_time_sec - diff.seconds) // 60}분 ' \
+                                             f'{(least_leader_time_sec - diff.seconds) % 60}초 남았습니다.'
 
 
             if 'message' in request.session:
