@@ -15,6 +15,7 @@ import markdown
 import pandas
 import os
 import io
+from sklearn.metrics import f1_score
 
 least_leader_time_sec = 60 * 60
 
@@ -60,7 +61,7 @@ def page_leader(request):
             create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
             team_submit.append({
                 'team_name': team_instance.team_name,
-                'score': l.submit_score * 100,
+                'score': l.submit_score,
                 'create_time': create_time,
                 'count': leader_time_instance.leader_count,
             })
@@ -97,7 +98,7 @@ def page_submit(request):
                     'sub_num': l.submit_pk,
                     'file_name': l.submit_name,
                     'submitter': l.submit_user_pk.username,
-                    'score': l.submit_score * 100,
+                    'score': l.submit_score,
                     'create_time': create_time,
                     'is_selected': bool(l.submit_leader),
                 })
@@ -184,7 +185,7 @@ def form_submission(request):
 
             answer = answer['weather'].values
             submission = submission['weather'].values
-            submit_score = sum(answer == submission) / len(answer)
+            submit_score = f1_score(answer, submission)
         except:
             request.session['message'] = '파일 제출 과정에서 오류가 발생했거나 형식이 다릅니다.'
             return redirect('submit')
