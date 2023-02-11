@@ -60,7 +60,7 @@ def page_leader(request):
             create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
             team_submit.append({
                 'team_name': team_instance.team_name,
-                'score': l.submit_score,
+                'score': l.submit_score * 100,
                 'create_time': create_time,
                 'count': leader_time_instance.leader_count,
             })
@@ -97,7 +97,7 @@ def page_submit(request):
                     'sub_num': l.submit_pk,
                     'file_name': l.submit_name,
                     'submitter': l.submit_user_pk.username,
-                    'score': l.submit_score,
+                    'score': l.submit_score * 100,
                     'create_time': create_time,
                     'is_selected': bool(l.submit_leader),
                 })
