@@ -31,3 +31,8 @@ class Explain(models.Model):
 class Image(models.Model):
     image_pk = models.AutoField(primary_key=True)
     image_data = models.ImageField(upload_to='')
+
+class Config(models.Model):
+    config_pk = models.AutoField(primary_key=True)
+    config_name = models.CharField(max_length=20, unique=True)
+    config_value = models.IntegerField()

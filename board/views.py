@@ -8,7 +8,8 @@ from .models import (
     Explain,
     Team,
     SubmitResult,
-    LeaderTime
+    LeaderTime,
+    Config
 )
 
 import markdown
@@ -17,7 +18,7 @@ import os
 import io
 from sklearn.metrics import f1_score
 
-least_leader_time_sec = 60 * 60
+least_leader_time_sec = int(Config.objects.get(config_name='REG_LEADERBOARD_SEC').config_value)
 
 def page_index(request):
     if request.user.is_anonymous:
