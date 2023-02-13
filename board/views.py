@@ -18,7 +18,6 @@ import os
 import io
 from sklearn.metrics import f1_score
 
-least_leader_time_sec = int(Config.objects.get(config_name='REG_LEADERBOARD_SEC').config_value)
 
 def page_index(request):
     if request.user.is_anonymous:
@@ -76,6 +75,7 @@ def page_submit(request):
         return redirect('login')
     else:
         team_instance = request.user.team_user.all()
+        least_leader_time_sec = int(Config.objects.get(config_name='REG_LEADERBOARD_SEC').config_value)
         if team_instance:
             team_instance = team_instance[0]
             team_users = []
@@ -209,13 +209,15 @@ def form_leader(request):
     if request.user.is_anonymous:
         return redirect('login')
     elif request.method == 'GET' and request.GET['sub_pk']:
+        least_leader_time_sec = int(Config.objects.get(config_name='REG_LEADERBOARD_SEC').config_value)
         team_instance = request.user.team_user.all()[0]
         last_submit = LeaderTime.objects.filter(leader_team=team_instance)
         if last_submit:
             last_submit = last_submit[0]
             diff = now() - last_submit.leader_create
             if diff.seconds < least_leader_time_sec:
-                request.session['message'] = f'리더보드 등록은 팀당 {least_leader_time_sec}초에 한번만 가능합니다. 현재 {least_leader_time_sec - diff.seconds}초 남았습니다.'
+                request.session['message'] = f'리더보드 등록은 팀당 {least_leader_time_sec // 60}분 {least_leader_time_sec % 60}초에 한번만 가능합니다. ' \
+                                             f'현재 {(least_leader_time_sec - diff.seconds) // 60}분 {(least_leader_time_sec - diff.seconds) % 60}초 남았습니다.'
                 return redirect('submit')
         else:
             last_submit = LeaderTime(leader_team=team_instance, leader_count=0)
