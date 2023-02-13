@@ -80,7 +80,7 @@ def page_submit(request):
             team_instance = team_instance[0]
             team_users = []
             for u in team_instance.team_member.all():
-                name = u.username
+                name = u.get_full_name()
                 last_submit = u.submit_user.all().order_by('-submit_create')
                 if last_submit:
                     last_submit = last_submit[0].submit_create
@@ -98,7 +98,7 @@ def page_submit(request):
                 team_submit.append({
                     'sub_num': l.submit_pk,
                     'file_name': l.submit_name,
-                    'submitter': l.submit_user_pk.username,
+                    'submitter': l.submit_user_pk.get_full_name(),
                     'score': l.submit_score,
                     'create_time': create_time,
                     'is_selected': bool(l.submit_leader),
