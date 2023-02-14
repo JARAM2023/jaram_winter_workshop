@@ -54,8 +54,21 @@ def page_leader(request):
         return redirect('login')
     else:
         leaderboard = SubmitResult.objects.filter(submit_leader=True).order_by('-submit_score', 'submit_create')
+
+        leaderboard_page = Paginator(leaderboard, 15)
+        now_page = request.GET.get('page')
+        if now_page is None:
+            now_page = 1
+        else:
+            now_page = int(now_page)
+
+        if now_page > leaderboard_page.num_pages:
+            now_page = leaderboard_page.num_pages
+        elif now_page < 1:
+            now_page = 1
+
         team_submit = []
-        for l in leaderboard:
+        for l in leaderboard_page.get_page(now_page):
             team_instance = l.submit_team_pk
             leader_time_instance = team_instance.leader_team
             create_time = leader_time_instance.leader_create
@@ -67,7 +80,9 @@ def page_leader(request):
                 'count': leader_time_instance.leader_count,
             })
         context = {
-            'submit_log': team_submit
+            'submit_log': team_submit,
+            'total_page': leaderboard_page.num_pages,
+            'now_page': now_page
         }
         return render(request, 'leader.html', context)
 

@@ -4,6 +4,22 @@
         <v-card-title>리더보드</v-card-title>
         <leaderboard></leaderboard>
     </v-card>
+    <div class="text-center">
+        <v-container>
+            <v-row justify="center">
+                <v-col cols="8">
+                    <v-container class="max-width">
+                        <v-pagination
+                            :model-value="{{ now_page }}"
+                            :length="{{ total_page }}"
+                            size="small"
+                            @update:model-value="onTableClicked"
+                        ></v-pagination>
+                    </v-container>
+                </v-col>
+            </v-row>
+        </v-container>
+    </div>
 {% endblock %}
 {% block index_js %}
     app.component('leaderboard', {
@@ -40,4 +56,9 @@
             </tbody>
         </v-table>`,
         })
+{% endblock %}
+{% block index_methods %}
+onTableClicked(next) {
+    this.$defaultWindow.location.href='{% url 'leader' %}?page=' + next
+}
 {% endblock %}
