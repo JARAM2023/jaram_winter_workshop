@@ -3,7 +3,7 @@
     <div id="app">
         <v-app :theme="theme">
             <v-app-bar>
-                <v-app-bar-title>Workshop</v-app-bar-title>
+                <v-app-bar-title style="cursor: pointer" @click="this.$defaultWindow.location.href='{% url 'index' %}'">Workshop</v-app-bar-title>
               <v-spacer></v-spacer>
 
 {#              <v-btn#}
@@ -52,7 +52,7 @@
 
         const vuetify = createVuetify()
 
-        createApp({
+        let app = createApp({
             delimiters: ['[[', ']]'],
             data() {
               return {
@@ -84,6 +84,8 @@
             mounted() {
                 this.snackbar = true
             }
-        }).use(vuetify).mount('#app')
+        })
+       app.config.globalProperties.$defaultWindow = window
+        app.use(vuetify).mount('#app')
     </script>
 {% endblock %}

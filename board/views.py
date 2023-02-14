@@ -21,17 +21,14 @@ from sklearn.metrics import f1_score
 
 
 def page_index(request):
-    if request.user.is_anonymous:
-        return redirect('login')
-    else:
-        index_cont = Explain.objects.get(explain_id='index_cont').explain_text
-        index_data = Explain.objects.get(explain_id='index_data').explain_text
-        index_cont = markdown.markdown(index_cont)
-        index_data = markdown.markdown(index_data)
-        return render(request, 'index.html', {
-            'index_cont': index_cont,
-            'index_data': index_data
-        })
+    index_cont = Explain.objects.get(explain_id='index_cont').explain_text
+    index_data = Explain.objects.get(explain_id='index_data').explain_text
+    index_cont = markdown.markdown(index_cont)
+    index_data = markdown.markdown(index_data)
+    return render(request, 'index.html', {
+        'index_cont': index_cont,
+        'index_data': index_data
+    })
 
 def page_login(request):
     if request.user.is_anonymous:
