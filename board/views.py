@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import check_password
 from django.utils.crypto import get_random_string
 from django.utils.timezone import now
+from django.core.paginator import Paginator
 from .models import (
     Explain,
     Team,
@@ -53,8 +54,21 @@ def page_leader(request):
         return redirect('login')
     else:
         leaderboard = SubmitResult.objects.filter(submit_leader=True).order_by('-submit_score', 'submit_create')
+
+        leaderboard_page = Paginator(leaderboard, 15)
+        now_page = request.GET.get('page')
+        if now_page is None:
+            now_page = 1
+        else:
+            now_page = int(now_page)
+
+        if now_page > leaderboard_page.num_pages:
+            now_page = leaderboard_page.num_pages
+        elif now_page < 1:
+            now_page = 1
+
         team_submit = []
-        for l in leaderboard:
+        for l in leaderboard_page.get_page(now_page):
             team_instance = l.submit_team_pk
             leader_time_instance = team_instance.leader_team
             create_time = leader_time_instance.leader_create
@@ -66,7 +80,9 @@ def page_leader(request):
                 'count': leader_time_instance.leader_count,
             })
         context = {
-            'submit_log': team_submit
+            'submit_log': team_submit,
+            'total_page': leaderboard_page.num_pages,
+            'now_page': now_page
         }
         return render(request, 'leader.html', context)
 
@@ -91,8 +107,21 @@ def page_submit(request):
 
             team_sub_log = SubmitResult.objects.filter(submit_team_pk=request.user.team_user.all()[0])
             team_sub_log = team_sub_log.order_by('-submit_score')
+
+            team_log_page = Paginator(team_sub_log, 10)
+            now_page = request.GET.get('page')
+            if now_page is None:
+                now_page = 1
+            else:
+                now_page = int(now_page)
+
+            if now_page > team_log_page.num_pages:
+                now_page = team_log_page.num_pages
+            elif now_page < 1:
+                now_page = 1
+
             team_submit = []
-            for l in team_sub_log:
+            for l in team_log_page.get_page(now_page):
                 create_time = l.submit_create
                 create_time = f'{create_time.day}일 {create_time.hour}시 {create_time.minute}분 {create_time.second}초'
                 team_submit.append({
@@ -106,7 +135,9 @@ def page_submit(request):
 
             context = {
                 'team_users': team_users,
-                'submit_log': team_submit
+                'submit_log': team_submit,
+                'total_page': team_log_page.num_pages,
+                'now_page': now_page
             }
 
             last_submit = LeaderTime.objects.filter(leader_team=team_instance)
