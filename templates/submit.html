@@ -7,7 +7,25 @@
     <v-card variant="outlined">
         <v-card-title>제출기록</v-card-title>
         <sub-log></sub-log>
-        <v-card-item>{{ last_leader }}</v-card-item>
+        <v-card-item>
+            {{ last_leader }}
+            <div class="text-center">
+                <v-container>
+                    <v-row justify="center">
+                        <v-col cols="8">
+                            <v-container class="max-width">
+                                <v-pagination
+                                    :model-value="{{ now_page }}"
+                                    :length="{{ total_page }}"
+                                    size="small"
+                                    @update:model-value="onTableClicked"
+                                ></v-pagination>
+                            </v-container>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </div>
+        </v-card-item>
     </v-card>
     <v-card variant="outlined">
         <v-card-title>제출하기</v-card-title>
@@ -103,8 +121,8 @@
         })
 {% endblock %}
 {% block index_methods %}
-onTableClicked() {
-    console.log(3232)
+onTableClicked(next) {
+    this.$defaultWindow.location.href='{% url 'submit' %}?page=' + next
 }
 {% endblock %}
 {% block snakbar %}
