@@ -21,12 +21,16 @@ class TeamAdmin(admin.ModelAdmin):
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         form_field: CustomMultipleModelChoiceField = CustomMultipleModelChoiceField(User.objects.all(), **kwargs)
-        print(form_field)
         return form_field
 
 class SubmitResultAdmin(admin.ModelAdmin):
     search_fields = ['submit_team_pk__submit_team__team_name']
-    list_display = ['submit_team_pk', 'submit_score', 'submit_create', 'submit_leader']
+    list_display = ['get_team_name', 'submit_score', 'submit_create', 'submit_leader']
+
+    ordering = ('-submit_create',)
+
+    def get_team_name(self, obj):
+        return obj.submit_team_pk.team_name
 
 class ConfigAdmin(admin.ModelAdmin):
     search_fields = ['config_name']
